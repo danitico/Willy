@@ -1,7 +1,3 @@
-(deffacts f1
-	(posicion-willy 0 0)
-   (visitados (x 0) (y 0))
-)
 (deftemplate visitados
 	(slot x)
 	(slot y)
@@ -18,7 +14,14 @@
 	(slot x)
 	(slot y)
 )
-
+(deftemplate riesgo-seguro
+	(slot x)
+	(slot y)
+)
+(deffacts f1
+	(posicion-willy 0 0)
+   (visitados (x 0) (y 0))
+)
 
 
 (defrule moveWilly
@@ -35,7 +38,19 @@
 	(fireLaser ?direction)
 )
 
-
+;(defrule RiesgosReales
+;	?h1 <- (posible-alien (x ?x) (y ?y))
+;	?h2 <- (posible-agujero (x ?z&:(= ?x ?z)) (y ?u&:(= ?y ?u)))
+;=>
+;	(assert(riesgo-seguro (x ?x) (y ?y)))
+;	(retract ?h1)
+;	(retract ?h2)
+;)
+;(defrule alien
+;	(percepts Noise)
+;	(posicion-willy ?x ?y)
+;=>
+	
 
 (defrule esSeguro
 	(declare (salience 99))
@@ -94,10 +109,22 @@
 )
 
 
+;(defrule LimiteSuperior
+;	(declare (salience 99))
+;	(posicion-willy ?x ?y)
+;	(percepts)
+	
+;=>
+;	(assert(casilla-segura (x (- ?x 1)) (y ?y)))
+;	(assert(casilla-segura (x ?x) (y (+ ?y 1))))
+;)
+
+
 
 (defrule WillyNorth
 	(declare (salience 99))
-;	(visitados (x ?x) (y ?y&:(+ ?y 1)))
+;	(not (posible-alien (x ?x) (y ?y&:(+ ?y 1))))
+;	(not 
 	?h2 <- (direccion north)
 	?h1 <- (posicion-willy ?x ?y)
 =>
