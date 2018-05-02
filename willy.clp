@@ -222,7 +222,7 @@
 
 (defrule stop-willy
 	(declare (salience 100))
-	(movimientos 999)
+	(movimientos 998)
 =>
 	(assert(parar))
 )
