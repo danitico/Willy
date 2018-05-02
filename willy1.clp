@@ -27,6 +27,10 @@
 	(slot x)
 	(slot y)
 )
+(deftemplate alien-seguro
+	(slot x)
+	(slot y)
+)
 (deffacts f1
 	(posicion-willy 0 0)
    (visitados (x 0) (y 0))
@@ -140,7 +144,41 @@
 	(movimientos ?y&:(< ?y 998))
 	(anterior ?x)
 =>
+	(focus disparar-alien)
 	(moveWilly ?x)
 	(focus contabilizador-movimientos)
+	(return)
+)
+
+(defrule localizacion-posible-alien
+	(percepts $? Noise $?)
+	(posicion-willy ?x ?y)
+=>
+	(assert(posible-alien (x ?x) (y ?y)))
+)
+
+(defrule hay-alien
+	?h1 <- (posible-alien (x ?x) (y ?y))
+	?h2 <- (posible-alien (x ?x1) (y ?y1))
+	?h3 <- (posible-alien (x ?x2) (y ?y2))
+	?h4 <- (posible-alien (x ?x3) (y ?y3))
+	(test(= (abs(- ?x ?y))
+		(abs(- ?x1 ?y1))
+		(abs(- ?x2 ?y2))
+		(abs(- ?x3 ?y3))
+	))
+	(test (= ?y ?y1))
+	(test (neq ?h1 ?h2 ?h3 ?h4))
+=>
+	(assert(alien-seguro (x (div (+ ?x ?x1) 2))  (y (div (+ ?y ?y1) 2)) ))
+)
+
+(defmodule disparar-alien (import InternalFunctions deffunction ?ALL) (import myMAIN deftemplate ?ALL) (export ?ALL))
+(defrule disparar-alien::fireWilly
+	(hasLaser)
+	(directions $? ?direction $?)
+	(or (percepts Noise) (percepts Noise Pull) (percepts Pull Noise))
+	=>
+	(fireLaser ?direction)
 	(return)
 )
