@@ -18,12 +18,12 @@
 	(posicion-willy 0 0)
    (visitados (x 0) (y 0))
 	(anterior nada)
-	(movimientos 2)
+	(movimientos 1)
 )
 
 
 (defrule moveWilly
-	(declare (salience 98))
+	(declare (salience 97))
 	(not(parar))
    (directions $? ?direction $?)
 	?h1 <- (movimientos ?x)
@@ -53,7 +53,7 @@
 ;	(percepts Noise)
 ;	(posicion-willy ?x ?y)
 ;=>
-	
+
 
 (defrule esSeguroVisitados
 	(declare (salience 99))
@@ -124,7 +124,7 @@
 ;	(declare (salience 99))
 ;	(posicion-willy ?x ?y)
 ;	(percepts)
-	
+
 ;=>
 ;	(assert(casilla-segura (x (- ?x 1)) (y ?y)))
 ;	(assert(casilla-segura (x ?x) (y (+ ?y 1))))
@@ -168,7 +168,7 @@
 
 (defrule WillyEast
 	(declare (salience 99))
-	?h1 <- (posicion-willy ?x ?y)	
+	?h1 <- (posicion-willy ?x ?y)
 	?h2 <- (direccion east)
 	?h3 <- (anterior ?)
 ;	(not(visitados (x ?z&:(+ ?x 1)) (y ?u)))
@@ -200,15 +200,19 @@
 )
 
 (defrule evitar-peligro
-	(declare (salience 99))
-	(or (percepts Noise) (percepts Pull) (percepts Noise Pull) (percerpt Pull Noise))
-	(anterior ?x)
+	(declare (salience 98))
+	(or (percepts Noise) (percepts Pull) (percepts Noise Pull) (percepts Pull Noise))
 	?h1 <- (movimientos ?y)
+	?h2 <- (anterior ?x)
 =>
 	(moveWilly ?x)
 	(retract ?h1)
-	(assert(movimientos (+ ?y 2)))
+	;(retract ?h2)
+	(assert(movimientos (+ ?y 1)))
 )
+
+
+
 (defrule quitarpeligro-alien
 	(visitados (x ?x) (y ?y))
 	?h1 <- (posible-alien (x ?x1&:(= ?x1 ?x)) (y ?y1&:(= ?y1 ?y)))
