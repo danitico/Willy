@@ -57,7 +57,7 @@
 (defmodule move-willy (import InternalFunctions deffunction ?ALL) (import myMAIN deftemplate ?ALL) (export ?ALL))
 (defrule move-willy::moveWilly
 	(declare (salience 1))
-	(movimientos ?x&:(< ?x 998))
+	(movimientos ?x&:(< ?x 855))
   	(directions $? ?direction $?)
 =>
   	(moveWilly ?direction)
@@ -67,7 +67,7 @@
 
 (defrule move-willy::WillyNorth
 	(declare (salience 2))
-	(movimientos ?moves&:(< ?moves 998))
+	(movimientos ?moves&:(< ?moves 855))
 	?h1 <- (posicion-willy ?x ?y)
 	?h2 <- (anterior ?)
 	?h3 <- (direccion north)
@@ -84,7 +84,7 @@
 
 (defrule move-willy::WillySouth
 	(declare (salience 2))
-	(movimientos ?moves&:(< ?moves 998))
+	(movimientos ?moves&:(< ?moves 855))
 	?h1 <- (posicion-willy ?x ?y)
 	?h2 <- (anterior ?)
 	?h3 <- (direccion south)
@@ -101,7 +101,7 @@
 
 (defrule move-willy::WillyEast
 	(declare (salience 2))
-	(movimientos ?moves&:(< ?moves 998))
+	(movimientos ?moves&:(< ?moves 855))
 	?h1 <- (posicion-willy ?x ?y)
 	?h2 <- (anterior ?)
 	?h3 <- (direccion east)
@@ -118,7 +118,7 @@
 
 (defrule move-willy::WillyWest
 	(declare (salience 2))
-	(movimientos ?moves&:(< ?moves 998))
+	(movimientos ?moves&:(< ?moves 855))
 	?h1 <- (posicion-willy ?x ?y)
 	?h2 <- (anterior ?)
 	?h3 <- (direccion west)
@@ -136,7 +136,7 @@
 (defrule peligros::evitar-peligros-norte
 	(declare(salience 1))
 	(or (percepts Noise) (percepts Pull) (percepts Noise Pull) (percepts Pull Noise))
-	(movimientos ?y&:(< ?y 998))
+	(movimientos ?y&:(< ?y 855))
 	(anterior south)
 	?h1 <- (posicion-willy ?x1 ?x2)
 =>
@@ -153,7 +153,7 @@
 (defrule peligros::evitar-peligros-sur
 	(declare(salience 1))
 	(or (percepts Noise) (percepts Pull) (percepts Noise Pull) (percepts Pull Noise))
-	(movimientos ?y&:(< ?y 998))
+	(movimientos ?y&:(< ?y 855))
 	(anterior north)
 	?h1 <- (posicion-willy ?x1 ?x2)
 =>
@@ -170,7 +170,7 @@
 (defrule peligros::evitar-peligros-este
 	(declare(salience 1))
 	(or (percepts Noise) (percepts Pull) (percepts Noise Pull) (percepts Pull Noise))
-	(movimientos ?y&:(< ?y 998))
+	(movimientos ?y&:(< ?y 855))
 	(anterior west)
 	?h1 <- (posicion-willy ?x1 ?x2)
 =>
@@ -187,7 +187,7 @@
 (defrule peligros::evitar-peligros-oeste
 	(declare(salience 1))
 	(or (percepts Noise) (percepts Pull) (percepts Noise Pull) (percepts Pull Noise))
-	(movimientos ?y&:(< ?y 998))
+	(movimientos ?y&:(< ?y 855))
 	(anterior east)
 	?h1 <- (posicion-willy ?x1 ?x2)
 =>
@@ -207,6 +207,7 @@
 	(posicion-willy ?x ?y)
 =>
 	(assert(posible-alien (x ?x) (y ?y)))
+	(assert(es-alien))
 )
 
 (defrule peligros::hay-alien ;El menor de las diferencias puede dividir al resto de las diferencias :). Hazlo daniel
@@ -228,15 +229,16 @@
 )
 
 (defmodule disparar-alien (import InternalFunctions deffunction ?ALL) (import myMAIN deftemplate ?ALL) (import peligros ?ALL) (export ?ALL))
-(defrule disparar-alien::fireWilly
+(defrule disparar-alien::disparar-a-willy
 	(declare(salience 2))
 	(hasLaser)
 	; (directions $? ?direction $?)
 	?h1 <- (dispara ?a)
-	; (or (percepts Noise) (percepts Noise Pull) (percepts Pull Noise))
+	?h2 <- (es-alien)
 =>
 	(fireLaser ?a)
 	(retract ?h1)
+	(retract ?h2)
 	(return)
 )
 
