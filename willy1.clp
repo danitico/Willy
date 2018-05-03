@@ -140,6 +140,7 @@
 	(anterior south)
 	?h1 <- (posicion-willy ?x1 ?x2)
 =>
+	(assert(dispara north))
 	(focus disparar-alien)
 	(moveWilly south)
 	(retract ?h1)
@@ -156,6 +157,7 @@
 	(anterior north)
 	?h1 <- (posicion-willy ?x1 ?x2)
 =>
+	(assert(dispara south))
 	(focus disparar-alien)
 	(moveWilly north)
 	(retract ?h1)
@@ -172,6 +174,7 @@
 	(anterior west)
 	?h1 <- (posicion-willy ?x1 ?x2)
 =>
+	(assert(dispara east))
 	(focus disparar-alien)
 	(moveWilly west)
 	(retract ?h1)
@@ -188,6 +191,7 @@
 	(anterior east)
 	?h1 <- (posicion-willy ?x1 ?x2)
 =>
+	(assert(dispara west))
 	(focus disparar-alien)
 	(moveWilly east)
 	(retract ?h1)
@@ -223,15 +227,24 @@
 	(assert(alien-seguro (x (div (+ ?x ?x1) 2))  (y (div (+ ?y ?y1) 2)) ))
 )
 
-(defmodule disparar-alien (import InternalFunctions deffunction ?ALL) (import myMAIN deftemplate ?ALL) (export ?ALL))
+(defmodule disparar-alien (import InternalFunctions deffunction ?ALL) (import myMAIN deftemplate ?ALL) (import peligros ?ALL) (export ?ALL))
 (defrule disparar-alien::fireWilly
+	(declare(salience 2))
 	(hasLaser)
 	; (directions $? ?direction $?)
-	(direccion ?direction)
-	(or (percepts Noise) (percepts Noise Pull) (percepts Pull Noise))
-	=>
-	(fireLaser ?direction)
+	?h1 <- (dispara ?a)
+	; (or (percepts Noise) (percepts Noise Pull) (percepts Pull Noise))
+=>
+	(fireLaser ?a)
+	(retract ?h1)
 	(return)
+)
+
+(defrule disparar-alien::borrarDireccionDisparo
+	(declare(salience 1))
+	?h1 <- (dispara ?direction)
+=>
+	(retract ?h1)
 )
 ; (defmodule calculo-posicion-willy (import InternalFunctions deffunction ?ALL) (import myMAIN deftemplate ?ALL) (export ?ALL))
 ; (defrule calculo-posicion-willy::posicion-north
