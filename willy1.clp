@@ -72,7 +72,7 @@
 	?h1 <- (direccion north)
 	?h2 <- (anterior ?)
 =>
-	(focus calculo-posicion-willy)
+	;(focus calculo-posicion-willy)
 	(retract ?h1)
 	(retract ?h2)
 	(assert(anterior south))
@@ -87,7 +87,7 @@
 	?h1 <- (direccion south)
 	?h2 <- (anterior ?)
 =>
-	(focus calculo-posicion-willy)
+	;(focus calculo-posicion-willy)
 	(retract ?h1)
 	(retract ?h2)
 	(assert(anterior north))
@@ -102,7 +102,7 @@
 	?h1 <- (direccion east)
 	?h2 <- (anterior ?)
 =>
-	(focus calculo-posicion-willy)
+	;(focus calculo-posicion-willy)
 	(retract ?h1)
 	(retract ?h2)
 	(assert(anterior west))
@@ -117,7 +117,7 @@
 	?h1 <- (direccion west)
 	?h2 <- (anterior ?)
 =>
-	(focus calculo-posicion-willy)
+	;(focus calculo-posicion-willy)
 	(retract ?h1)
 	(retract ?h2)
 	(assert(anterior east))
